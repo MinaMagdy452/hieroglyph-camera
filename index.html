@@ -2,65 +2,61 @@
 <html lang="ar">
 <head>
   <meta charset="UTF-8">
-  <title>كاميرا هيروغليفية</title>
+  <title>Pharaoh Vibes</title>
   <style>
-    body { font-family: Arial; text-align: center; margin:30px;
+    body {
+      font-family: 'Cairo', sans-serif;
+      text-align: center;
+      margin: 0;
+      padding: 0;
       background: url('https://i.imgur.com/Y6CjY8U.jpeg') no-repeat center center fixed;
-      background-size: cover; color: white; }
-    video, canvas { border:2px solid #eee; border-radius:10px; margin:10px; }
-    button, input { margin:10px; padding:10px 20px; font-size:16px; border-radius:5px;
-      border:none; cursor:pointer; }
-    #convertBtn { background:teal; color:white; }
-    #captureBtn { background:goldenrod; color:white; }
-    #downloadBtn { display:none; }
+      background-size: cover;
+      color: white;
+    }
+    .container {
+      background: rgba(0, 0, 0, 0.6);
+      padding: 30px;
+      border-radius: 20px;
+      margin: 50px auto;
+      width: 90%;
+      max-width: 400px;
+    }
+    video {
+      width: 100%;
+      border-radius: 15px;
+    }
+    input, button {
+      margin: 10px 0;
+      padding: 12px;
+      font-size: 18px;
+      border-radius: 8px;
+      width: 100%;
+      border: none;
+    }
+    #convertBtn { background-color: teal; color: white; }
+    #captureBtn { background-color: goldenrod; color: white; }
+    #glyphDisplay {
+      font-size: 28px;
+      color: gold;
+      margin: 15px 0;
+    }
   </style>
 </head>
 <body>
-  <h2>📸 اكتب اسمك بالإنجليزية وتحول لهيروغليفية!</h2>
-  <input type="text" id="username" placeholder="اكتب اسمك بالإنجليزية" /><br>
-  <video id="video" width="320" height="240" autoplay></video><br>
-  <button id="convertBtn">🔁 تحويل الاسم</button>
-  <button id="captureBtn">📷 التقط صورة</button><br>
-  <canvas id="canvas" width="320" height="240"></canvas><br>
-  <a id="downloadBtn" download="your_photo.png">⬇️ تحميل الصورة</a>
+  <div class="container">
+    <h2>🌟 اكتب اسمك بالعربي أو الإنجليزي 🌟</h2>
+    <input type="text" id="username" placeholder="اكتب اسمك هنا" />
+    <button id="convertBtn">🔁 تحويل للاسم الفرعوني</button>
+    <div id="glyphDisplay">𓂀</div>
+    <video id="video" autoplay muted playsinline></video>
+    <button id="captureBtn">🎥 تشغيل الكاميرا فقط</button>
+  </div>
 
   <script>
-    const video = document.getElementById('video'),
-          canvas = document.getElementById('canvas'),
-          ctx = canvas.getContext('2d'),
-          convertBtn = document.getElementById('convertBtn'),
-          captureBtn = document.getElementById('captureBtn'),
-          downloadBtn = document.getElementById('downloadBtn');
-    let glyphs = '';
+    const video = document.getElementById('video');
+    const convertBtn = document.getElementById('convertBtn');
+    const captureBtn = document.getElementById('captureBtn');
+    const glyphDisplay = document.getElementById('glyphDisplay');
+
     const hieroMap = {
-      A:'𓄿',B:'𓃀',C:'𓍿',D:'𓂧',E:'𓇋',F:'𓆑',G:'𓎼',H:'𓎛',
-      I:'𓇋',J:'𓆓',K:'𓎡',L:'𓃭',M:'𓅓',N:'𓈖',O:'𓅱',P:'𓊪',
-      Q:'𓏘',R:'𓂋',S:'𓋴',T:'𓏏',U:'𓅱',V:'𓆑',W:'𓅱',X:'𓐍',
-      Y:'𓇌',Z:'𓊃'
-    };
-
-    navigator.mediaDevices.getUserMedia({video:true})
-      .then(s => video.srcObject = s)
-      .catch(err => alert('تعذر تشغيل الكاميرا: ' + err));
-
-    convertBtn.onclick = () => {
-      const name = document.getElementById('username').value.trim();
-      glyphs = name.toUpperCase().split('').map(c => hieroMap[c] || '').join('');
-      if(!glyphs) return alert('اكتب اسم بالإنجليزية أولاً');
-      alert('تحويل للاسم: ' + glyphs);
-    };
-
-    captureBtn.onclick = () => {
-      if(!glyphs) return alert('اضغط أولاً “تحويل الاسم”');
-      ctx.drawImage(video,0,0,canvas.width,canvas.height);
-      ctx.fillStyle='gold';
-      ctx.font='20px Arial';
-      ctx.fillText(glyphs,10,30);
-      const img=canvas.toDataURL('image/png');
-      downloadBtn.href=img;
-      downloadBtn.style.display='inline';
-      downloadBtn.click();
-    };
-  </script>
-</body>
-</html>
+      A:'𓄿',B:'𓃀',C:'𓍿
