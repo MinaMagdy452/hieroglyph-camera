@@ -151,6 +151,7 @@
     }
     
     #glyphDisplay {
+      font-family: "Arial Unicode MS", "Segoe UI Symbol", sans-serif;
       font-size: 48px;
       margin: 25px 0;
       color: var(--gold);
@@ -349,16 +350,16 @@
   <div class="loader" id="loader"></div>
 
   <script>
-    // Enhanced hieroglyph map with better symbol support
+    // Enhanced hieroglyph map with proper Unicode escapes
     const hieroMap = {
-      'A': '𓄿', 'B': '𓃀', 'C': '𓍿', 'D': '𓂧', 'E': '𓇋',
-      'F': '𓆑', 'G': '𓎼', 'H': '𓎛', 'I': '𓇋', 'J': '𓆓',
-      'K': '𓎡', 'L': '𓃭', 'M': '𓅓', 'N': '𓈖', 'O': '𓅱',
-      'P': '𓊪', 'Q': '𓏘', 'R': '𓂋', 'S': '𓋴', 'T': '𓏏',
-      'U': '𓅱', 'V': '𓆑', 'W': '𓅱', 'X': '𓐍', 'Y': '𓇌', 'Z': '𓊃',
+      'A': '\u{13000}', 'B': '\u{130C0}', 'C': '\u{1337F}', 'D': '\u{130A7}', 'E': '\u{1308B}',
+      'F': '\u{13091}', 'G': '\u{133BC}', 'H': '\u{1339B}', 'I': '\u{1308B}', 'J': '\u{13093}',
+      'K': '\u{133A1}', 'L': '\u{130ED}', 'M': '\u{130D3}', 'N': '\u{13196}', 'O': '\u{130F1}',
+      'P': '\u{132EA}', 'Q': '\u{133D8}', 'R': '\u{1308B}', 'S': '\u{132F4}', 'T': '\u{1330F}',
+      'U': '\u{130F1}', 'V': '\u{13091}', 'W': '\u{130F1}', 'X': '\u{1330D}', 'Y': '\u{131CC}', 'Z': '\u{13283}',
       ' ': ' ', 
-      '0': '𓏤', '1': '𓏺', '2': '𓏻', '3': '𓏼', '4': '𓏽',
-      '5': '𓏾', '6': '𓏿', '7': '𓐀', '8': '𓐁', '9': '𓐂'
+      '0': '\u{133E4}', '1': '\u{133FA}', '2': '\u{133FB}', '3': '\u{133FC}', '4': '\u{133FD}',
+      '5': '\u{133FE}', '6': '\u{133FF}', '7': '\u{13400}', '8': '\u{13401}', '9': '\u{13402}'
     };
     
     // DOM elements
@@ -484,11 +485,11 @@
       capturedImage = elements.canvas.toDataURL('image/png');
       elements.resultImage.src = capturedImage;
       
-      // Add hieroglyph text to image
+      // Add hieroglyph text to image (at top)
       addTextToImage();
     });
     
-    // Add text to image (now at TOP)
+    // Add text to image
     function addTextToImage() {
       const name = elements.username.value.trim();
       if (!name) return;
@@ -506,13 +507,13 @@
         ctx.drawImage(img, 0, 0);
         
         // Text settings
-        ctx.font = 'bold 60px Cairo, sans-serif';
+        ctx.font = 'bold 60px "Arial Unicode MS", "Segoe UI Symbol", sans-serif';
         ctx.fillStyle = 'rgba(255, 215, 0, 0.9)';
         ctx.strokeStyle = 'rgba(0, 0, 0, 0.8)';
         ctx.lineWidth = 3;
         ctx.textAlign = 'center';
         
-        // Text position (now at TOP)
+        // Text position (at top)
         const x = elements.canvas.width / 2;
         const y = 80; // Position from top
         
