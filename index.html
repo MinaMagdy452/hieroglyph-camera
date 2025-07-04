@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>محول الهيروغليفية الفرعوني</title>
+  <title>Pharaoh Hieroglyph Converter</title>
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
@@ -222,7 +222,7 @@
     }
     
     .instructions ul {
-      padding-right: 20px;
+      padding-left: 20px;
     }
     
     .instructions li {
@@ -249,7 +249,7 @@
       }
     }
     
-    /* تأثيرات للهيروغليفية */
+    /* Hieroglyph effects */
     .hiero-char {
       transition: transform 0.3s;
       display: inline-block;
@@ -259,7 +259,7 @@
       transform: scale(1.2) rotate(5deg);
     }
     
-    /* تحميل */
+    /* Loader */
     .loader {
       display: none;
       border: 4px solid rgba(255, 255, 255, 0.3);
@@ -276,7 +276,7 @@
       100% { transform: rotate(360deg); }
     }
     
-    /* تنبيهات */
+    /* Alerts */
     .alert {
       padding: 15px;
       border-radius: 8px;
@@ -300,47 +300,47 @@
 <body>
   <div class="container">
     <div class="card">
-      <h1><i class="fas fa-phoenix-framework"></i> محول الهيروغليفية الفرعوني</h1>
+      <h1><i class="fas fa-phoenix-framework"></i> Pharaoh Hieroglyph Converter</h1>
       
       <div class="alert" id="alertBox"></div>
       
       <div class="input-group">
-        <label for="username"><i class="fas fa-user"></i> اسمك بالإنجليزية:</label>
-        <input type="text" id="username" placeholder="مثال: Ahmed, Mona">
+        <label for="username"><i class="fas fa-user"></i> Your Name in English:</label>
+        <input type="text" id="username" placeholder="Example: Ahmed, Mona">
       </div>
       
-      <button id="convertBtn" class="btn"><i class="fas fa-exchange-alt"></i> تحويل للهيروغليفية</button>
+      <button id="convertBtn" class="btn"><i class="fas fa-exchange-alt"></i> Convert to Hieroglyphs</button>
       
       <div id="glyphDisplay">𓂀</div>
       
-      <button id="cameraBtn" class="btn btn-gold"><i class="fas fa-camera"></i> تشغيل الكاميرا</button>
+      <button id="cameraBtn" class="btn btn-gold"><i class="fas fa-camera"></i> Open Camera</button>
       
       <div class="media-container" id="mediaContainer">
         <video id="video" autoplay muted playsinline></video>
         <canvas id="canvas"></canvas>
         
         <div class="actions">
-          <button id="snapBtn" class="btn btn-gold"><i class="fas fa-camera-retro"></i> التقاط صورة</button>
-          <button id="cancelCameraBtn" class="btn btn-red"><i class="fas fa-times"></i> إلغاء</button>
+          <button id="snapBtn" class="btn btn-gold"><i class="fas fa-camera-retro"></i> Take Photo</button>
+          <button id="cancelCameraBtn" class="btn btn-red"><i class="fas fa-times"></i> Cancel</button>
         </div>
       </div>
       
       <div class="result-container" id="resultContainer">
-        <h3>صورتك بالهيروغليفية:</h3>
-        <img id="resultImage" alt="النتيجة">
+        <h3>Your Hieroglyph Image:</h3>
+        <img id="resultImage" alt="Result">
         <div class="actions">
-          <button id="downloadBtn" class="btn btn-gold"><i class="fas fa-download"></i> تحميل الصورة</button>
-          <button id="newPhotoBtn" class="btn"><i class="fas fa-redo"></i> صورة جديدة</button>
+          <button id="downloadBtn" class="btn btn-gold"><i class="fas fa-download"></i> Download Image</button>
+          <button id="newPhotoBtn" class="btn"><i class="fas fa-redo"></i> New Photo</button>
         </div>
       </div>
       
       <div class="instructions">
-        <h3><i class="fas fa-info-circle"></i> طريقة الاستخدام:</h3>
+        <h3><i class="fas fa-info-circle"></i> How to Use:</h3>
         <ul>
-          <li>اكتب اسمك بالحروف الإنجليزية (A-Z)</li>
-          <li>اضغط على زر التحويل لرؤية اسمك بالهيروغليفية</li>
-          <li>يمكنك تشغيل الكاميرا لالتقاط صورة مع اسمك</li>
-          <li>حفظ الصورة لمشاركتها مع الأصدقاء</li>
+          <li>Type your name in English letters (A-Z)</li>
+          <li>Click convert to see your name in hieroglyphs</li>
+          <li>You can open camera to take a photo with your name</li>
+          <li>Save the image to share with friends</li>
         </ul>
       </div>
     </div>
@@ -349,7 +349,7 @@
   <div class="loader" id="loader"></div>
 
   <script>
-    // قاموس الهيروغليفية مع تحسينات
+    // Enhanced hieroglyph map with better symbol support
     const hieroMap = {
       'A': '𓄿', 'B': '𓃀', 'C': '𓍿', 'D': '𓂧', 'E': '𓇋',
       'F': '𓆑', 'G': '𓎼', 'H': '𓎛', 'I': '𓇋', 'J': '𓆓',
@@ -361,7 +361,7 @@
       '5': '𓏾', '6': '𓏿', '7': '𓐀', '8': '𓐁', '9': '𓐂'
     };
     
-    // عناصر DOM
+    // DOM elements
     const elements = {
       username: document.getElementById('username'),
       convertBtn: document.getElementById('convertBtn'),
@@ -380,11 +380,11 @@
       alertBox: document.getElementById('alertBox')
     };
     
-    // متغيرات الحالة
+    // State variables
     let stream = null;
     let capturedImage = null;
     
-    // عرض التنبيه
+    // Show alert message
     function showAlert(message, type = 'success') {
       elements.alertBox.textContent = message;
       elements.alertBox.className = `alert alert-${type}`;
@@ -395,57 +395,57 @@
       }, 5000);
     }
     
-    // تحويل الاسم لهيروغليفية
+    // Convert name to hieroglyphs
     function convertToHieroglyphs(name) {
       return name.toUpperCase().split('').map(c => hieroMap[c] || '?').join('');
     }
     
-    // تحويل الزر
+    // Convert button handler
     elements.convertBtn.addEventListener('click', () => {
       const name = elements.username.value.trim();
       
       if (!name) {
-        showAlert('من فضلك أدخل اسمك أولاً', 'error');
+        showAlert('Please enter your name first', 'error');
         elements.glyphDisplay.textContent = '𓂀';
         return;
       }
       
-      // عرض تأثير التحميل
+      // Show loading effect
       elements.loader.style.display = 'block';
       elements.glyphDisplay.textContent = '';
       
-      // محاكاة التأخير لتأثير أفضل
+      // Simulate delay for better UX
       setTimeout(() => {
         const glyphs = convertToHieroglyphs(name);
         
-        // عرض الحروف مع تأثير
+        // Display glyphs with animation
         elements.glyphDisplay.innerHTML = glyphs.split('').map(char => 
           `<span class="hiero-char">${char}</span>`
         ).join('');
         
         elements.loader.style.display = 'none';
-        showAlert('تم تحويل اسمك بنجاح!', 'success');
+        showAlert('Your name was converted successfully!', 'success');
       }, 800);
     });
     
-    // إدارة الكاميرا
+    // Camera management
     elements.cameraBtn.addEventListener('click', toggleCamera);
     elements.cancelCameraBtn.addEventListener('click', toggleCamera);
     elements.newPhotoBtn.addEventListener('click', toggleCamera);
     
     async function toggleCamera() {
       if (elements.mediaContainer.style.display === 'block') {
-        // إيقاف الكاميرا
+        // Stop camera
         if (stream) {
           stream.getTracks().forEach(track => track.stop());
           stream = null;
         }
         
         elements.mediaContainer.style.display = 'none';
-        elements.cameraBtn.innerHTML = '<i class="fas fa-camera"></i> تشغيل الكاميرا';
+        elements.cameraBtn.innerHTML = '<i class="fas fa-camera"></i> Open Camera';
         elements.resultContainer.style.display = 'none';
       } else {
-        // تشغيل الكاميرا
+        // Start camera
         try {
           elements.loader.style.display = 'block';
           
@@ -460,12 +460,12 @@
           
           elements.video.srcObject = stream;
           elements.mediaContainer.style.display = 'block';
-          elements.cameraBtn.innerHTML = '<i class="fas fa-camera"></i> إخفاء الكاميرا';
+          elements.cameraBtn.innerHTML = '<i class="fas fa-camera"></i> Close Camera';
           elements.resultContainer.style.display = 'none';
           
-          showAlert('تم تشغيل الكاميرا بنجاح', 'success');
+          showAlert('Camera started successfully', 'success');
         } catch (err) {
-          showAlert(`تعذر تشغيل الكاميرا: ${err.message}`, 'error');
+          showAlert(`Could not access camera: ${err.message}`, 'error');
           console.error('Camera error:', err);
         } finally {
           elements.loader.style.display = 'none';
@@ -473,7 +473,7 @@
       }
     }
     
-    // التقاط صورة
+    // Take photo
     elements.snapBtn.addEventListener('click', () => {
       if (!stream) return;
       
@@ -484,11 +484,11 @@
       capturedImage = elements.canvas.toDataURL('image/png');
       elements.resultImage.src = capturedImage;
       
-      // إضافة النص الهيروغليفي على الصورة
+      // Add hieroglyph text to image
       addTextToImage();
     });
     
-    // إضافة النص على الصورة
+    // Add text to image (now at TOP)
     function addTextToImage() {
       const name = elements.username.value.trim();
       if (!name) return;
@@ -502,28 +502,25 @@
         elements.canvas.height = img.height;
         const ctx = elements.canvas.getContext('2d');
         
-        // رسم الصورة الأصلية
+        // Draw original image
         ctx.drawImage(img, 0, 0);
         
-        // إعداد النص
+        // Text settings
         ctx.font = 'bold 60px Cairo, sans-serif';
         ctx.fillStyle = 'rgba(255, 215, 0, 0.9)';
         ctx.strokeStyle = 'rgba(0, 0, 0, 0.8)';
         ctx.lineWidth = 3;
         ctx.textAlign = 'center';
         
-        // قياس النص
-        const textWidth = ctx.measureText(glyphs).width;
-        
-        // وضع النص في وسط الصورة
+        // Text position (now at TOP)
         const x = elements.canvas.width / 2;
-        const y = elements.canvas.height - 50;
+        const y = 80; // Position from top
         
-        // رسم النص مع تأثير الظل
+        // Draw text with shadow effect
         ctx.strokeText(glyphs, x, y);
         ctx.fillText(glyphs, x, y);
         
-        // حفظ الصورة النهائية
+        // Save final image
         capturedImage = elements.canvas.toDataURL('image/png');
         elements.resultImage.src = capturedImage;
         elements.mediaContainer.style.display = 'none';
@@ -533,7 +530,7 @@
       img.src = capturedImage;
     }
     
-    // تحميل الصورة
+    // Download image
     elements.downloadBtn.addEventListener('click', () => {
       if (!capturedImage) return;
       
@@ -542,23 +539,23 @@
       link.href = capturedImage;
       link.click();
       
-      showAlert('تم تحميل الصورة بنجاح!', 'success');
+      showAlert('Image downloaded successfully!', 'success');
     });
     
-    // نسخ الهيروغليفية عند النقر عليها
+    // Copy hieroglyphs on click
     elements.glyphDisplay.addEventListener('click', () => {
       const text = elements.glyphDisplay.textContent;
       if (text && text !== '𓂀') {
         navigator.clipboard.writeText(text)
-          .then(() => showAlert('تم نسخ الهيروغليفية!', 'success'))
-          .catch(() => showAlert('تعذر النسخ', 'error'));
+          .then(() => showAlert('Hieroglyphs copied!', 'success'))
+          .catch(() => showAlert('Could not copy', 'error'));
       }
     });
     
-    // تحميل أولي
+    // Initial load
     window.addEventListener('load', () => {
       setTimeout(() => {
-        showAlert('مرحباً بك في محول الهيروغليفية الفرعوني!', 'success');
+        showAlert('Welcome to Pharaoh Hieroglyph Converter!', 'success');
       }, 1000);
     });
   </script>
