@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <title>كاميرا هيروغليفية</title>
+  <style>
+    body { font-family: Arial; text-align: center; margin:30px;
+      background: url('https://i.imgur.com/Y6CjY8U.jpeg') no-repeat center center fixed;
+      background-size: cover; color: white; }
+    video, canvas { border:2px solid #eee; border-radius:10px; margin:10px; }
+    button, input { margin:10px; padding:10px 20px; font-size:16px; border-radius:5px;
+      border:none; cursor:pointer; }
+    #convertBtn { background:teal; color:white; }
+    #captureBtn { background:goldenrod; color:white; }
+    #downloadBtn { display:none; }
+  </style>
+</head>
+<body>
+  <h2>📸 اكتب اسمك بالإنجليزية وتحول لهيروغليفية!</h2>
+  <input type="text" id="username" placeholder="اكتب اسمك بالإنجليزية" /><br>
+  <video id="video" width="320" height="240" autoplay></video><br>
+  <button id="convertBtn">🔁 تحويل الاسم</button>
+  <button id="captureBtn">📷 التقط صورة</button><br>
+  <canvas id="canvas" width="320" height="240"></canvas><br>
+  <a id="downloadBtn" download="your_photo.png">⬇️ تحميل الصورة</a>
+
+  <script>
+    const video = document.getElementById('video'),
+          canvas = document.getElementById('canvas'),
+          ctx = canvas.getContext('2d'),
+          convertBtn = document.getElementById('convertBtn'),
+          captureBtn = document.getElementById('captureBtn'),
+          downloadBtn = document.getElementById('downloadBtn');
+    let glyphs = '';
+    const hieroMap = {
+      A:'𓄿',B:'𓃀',C:'𓍿',D:'𓂧',E:'𓇋',F:'𓆑',G:'𓎼',H:'𓎛',
+      I:'𓇋',J:'𓆓',K:'𓎡',L:'𓃭',M:'𓅓',N:'𓈖',O:'𓅱',P:'𓊪',
+      Q:'𓏘',R:'𓂋',S:'𓋴',T:'𓏏',U:'𓅱',V:'𓆑',W:'𓅱',X:'𓐍',
+      Y:'𓇌',Z:'𓊃'
+    };
+
+    navigator.mediaDevices.getUserMedia({video:true})
+      .then(s => video.srcObject = s)
+      .catch(err => alert('تعذر تشغيل الكاميرا: ' + err));
+
+    convertBtn.onclick = () => {
+      const name = document.getElementById('username').value.trim();
+      glyphs = name.toUpperCase().split('').map(c => hieroMap[c] || '').join('');
+      if(!glyphs) return alert('اكتب اسم بالإنجليزية أولاً');
+      alert('تحويل للاسم: ' + glyphs);
+    };
+
+    captureBtn.onclick = () => {
+      if(!glyphs) return alert('اضغط أولاً “تحويل الاسم”');
+      ctx.drawImage(video,0,0,canvas.width,canvas.height);
+      ctx.fillStyle='gold';
+      ctx.font='20px Arial';
+      ctx.fillText(glyphs,10,30);
+      const img=canvas.toDataURL('image/png');
+      downloadBtn.href=img;
+      downloadBtn.style.display='inline';
+      downloadBtn.click();
+    };
+  </script>
+</body>
+</html>
