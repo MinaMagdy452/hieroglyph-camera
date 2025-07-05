@@ -8,15 +8,16 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
     :root {
-      --gold: #ffd700;
-      --dark-gold: #daa520;
+      --gold: #d4af37;
+      --dark-gold: #b8860b;
       --teal: #008080;
-      --black: #1a1a1a;
+      --black: #0a0a0a;
+      --papyrus: #f5e7c1;
     }
     
     body {
       font-family: 'Cairo', sans-serif;
-      background: var(--black) url('https://images.unsplash.com/photo-1548438294-1ad5d5f4f063?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80') no-repeat center/cover;
+      background: var(--black) url('https://images.unsplash.com/photo-1543716091-a840c05249ec?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80') no-repeat center/cover;
       color: white;
       min-height: 100vh;
       display: flex;
@@ -27,13 +28,21 @@
     }
     
     .card {
-      background: rgba(0, 0, 0, 0.8);
+      background: rgba(10, 10, 10, 0.85);
       padding: 30px;
-      border-radius: 15px;
+      border-radius: 10px;
       text-align: center;
       width: 100%;
       max-width: 500px;
-      box-shadow: 0 0 20px #000;
+      box-shadow: 0 0 25px rgba(212, 175, 55, 0.3);
+      border: 1px solid var(--gold);
+    }
+    
+    h2 {
+      color: var(--gold);
+      margin-bottom: 20px;
+      font-size: 28px;
+      text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8);
     }
     
     input, button {
@@ -41,46 +50,67 @@
       padding: 12px;
       margin: 8px 0;
       border: none;
-      border-radius: 8px;
+      border-radius: 6px;
       font-size: 16px;
+      font-family: 'Cairo', sans-serif;
     }
     
     input {
-      background: #f0f0f0;
+      background: var(--papyrus);
       color: #333;
+      border: 1px solid var(--dark-gold);
     }
     
     #cameraBtn {
-      background: var(--gold);
+      background: linear-gradient(to right, var(--gold), var(--dark-gold));
       color: var(--black);
       font-weight: bold;
+      transition: all 0.3s;
+    }
+    
+    #cameraBtn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(212, 175, 55, 0.4);
     }
     
     video, canvas {
       width: 100%;
       border-radius: 8px;
-      margin-top: 10px;
+      margin-top: 15px;
       display: none;
+      border: 2px solid var(--gold);
     }
     
     .actions {
       display: flex;
       gap: 10px;
-      margin-top: 10px;
+      margin-top: 15px;
     }
     
     .actions button {
       flex: 1;
+      transition: all 0.3s;
+    }
+    
+    .actions button:hover {
+      transform: translateY(-2px);
     }
     
     #resultCanvas {
-      border: 2px solid var(--gold);
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+    }
+    
+    /* Ankh Symbol Decorations */
+    .ankh {
+      color: var(--gold);
+      font-size: 24px;
+      margin: 0 5px;
     }
   </style>
 </head>
 <body>
   <div class="card">
-    <h2><i class="fas fa-camera"></i> Pharaoh Photo Converter</h2>
+    <h2><span class="ankh">☥</span> Pharaoh Photo Converter <span class="ankh">☥</span></h2>
     <input type="text" id="username" placeholder="Type your name in English">
     
     <button id="cameraBtn"><i class="fas fa-camera"></i> Open Camera</button>
@@ -90,11 +120,11 @@
     
     <div class="actions" id="actionButtons" style="display:none;">
       <button id="captureBtn" style="background:var(--teal);color:white;"><i class="fas fa-camera-retro"></i> Capture</button>
-      <button id="cancelBtn" style="background:#d9534f;color:white;"><i class="fas fa-times"></i> Cancel</button>
+      <button id="cancelBtn" style="background:#8B0000;color:white;"><i class="fas fa-times"></i> Cancel</button>
     </div>
     
     <div class="actions" id="downloadSection" style="display:none;">
-      <button id="downloadBtn" style="background:var(--gold);color:var(--black);"><i class="fas fa-download"></i> Download</button>
+      <button id="downloadBtn" style="background:linear-gradient(to right, var(--gold), var(--dark-gold));color:var(--black);"><i class="fas fa-download"></i> Download</button>
       <button id="newPhotoBtn" style="background:var(--teal);color:white;"><i class="fas fa-redo"></i> Retake</button>
     </div>
   </div>
@@ -135,7 +165,13 @@
 
       // Turn on camera
       try {
-        stream = await navigator.mediaDevices.getUserMedia({ video: true });
+        stream = await navigator.mediaDevices.getUserMedia({ 
+          video: { 
+            facingMode: 'user',
+            width: { ideal: 1280 },
+            height: { ideal: 720 }
+          } 
+        });
         video.srcObject = stream;
         video.style.display = 'block';
         document.getElementById('actionButtons').style.display = 'flex';
@@ -165,14 +201,21 @@
       // Convert name to hieroglyphs
       const hieroglyphs = name.toUpperCase().split('').map(c => hieroglyphMap[c] || '?').join('');
       
-      // Add hieroglyphs to image
-      ctx.font = 'bold 60px "Noto Sans Egyptian Hieroglyphs", sans-serif';
-      ctx.fillStyle = 'rgba(255, 215, 0, 0.9)';
+      // Add hieroglyphs to image with styling
+      ctx.font = 'bold 70px "Noto Sans Egyptian Hieroglyphs", sans-serif';
+      ctx.fillStyle = 'rgba(212, 175, 55, 0.9)';
       ctx.strokeStyle = 'rgba(0, 0, 0, 0.8)';
-      ctx.lineWidth = 3;
+      ctx.lineWidth = 4;
       ctx.textAlign = 'center';
-      ctx.strokeText(hieroglyphs, resultCanvas.width/2, 80);
-      ctx.fillText(hieroglyphs, resultCanvas.width/2, 80);
+      ctx.textBaseline = 'top';
+      
+      // Text shadow effect
+      for (let i = 0; i < 3; i++) {
+        ctx.strokeText(hieroglyphs, resultCanvas.width/2, 50);
+      }
+      
+      // Main text
+      ctx.fillText(hieroglyphs, resultCanvas.width/2, 50);
       
       // Show result
       resultCanvas.style.display = 'block';
@@ -184,7 +227,7 @@
     // Download Image
     document.getElementById('downloadBtn').addEventListener('click', () => {
       const link = document.createElement('a');
-      link.download = 'pharaoh-photo.png';
+      link.download = 'pharaoh-photo-' + Date.now() + '.png';
       link.href = resultCanvas.toDataURL('image/png');
       link.click();
     });
