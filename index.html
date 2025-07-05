@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Pharaoh Hieroglyph Converter</title>
+  <title>Pharaoh Photo Converter</title>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Egyptian+Hieroglyphs&family=Cairo:wght@400;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
@@ -11,7 +11,6 @@
       --gold: #ffd700;
       --dark-gold: #daa520;
       --teal: #008080;
-      --dark-teal: #006666;
       --black: #1a1a1a;
     }
     
@@ -24,6 +23,7 @@
       justify-content: center;
       align-items: center;
       margin: 0;
+      padding: 20px;
     }
     
     .card {
@@ -31,23 +31,9 @@
       padding: 30px;
       border-radius: 15px;
       text-align: center;
-      width: 90%;
+      width: 100%;
       max-width: 500px;
       box-shadow: 0 0 20px #000;
-    }
-    
-    #glyphDisplay {
-      font-family: 'Noto Sans Egyptian Hieroglyphs', sans-serif;
-      font-size: 48px;
-      min-height: 60px;
-      margin: 20px 0;
-      color: var(--gold);
-      background: rgba(0, 0, 0, 0.5);
-      padding: 15px;
-      border-radius: 10px;
-      display: flex;
-      justify-content: center;
-      flex-wrap: wrap;
     }
     
     input, button {
@@ -61,19 +47,16 @@
     
     input {
       background: #f0f0f0;
-    }
-    
-    #convertBtn {
-      background: var(--teal);
-      color: white;
+      color: #333;
     }
     
     #cameraBtn {
       background: var(--gold);
       color: var(--black);
+      font-weight: bold;
     }
     
-    video, #resultCanvas {
+    video, canvas {
       width: 100%;
       border-radius: 8px;
       margin-top: 10px;
@@ -89,14 +72,16 @@
     .actions button {
       flex: 1;
     }
+    
+    #resultCanvas {
+      border: 2px solid var(--gold);
+    }
   </style>
 </head>
 <body>
   <div class="card">
-    <h2><i class="fas fa-phoenix-framework"></i> Pharaoh Hieroglyph Converter</h2>
+    <h2><i class="fas fa-camera"></i> Pharaoh Photo Converter</h2>
     <input type="text" id="username" placeholder="Type your name in English">
-    <button id="convertBtn"><i class="fas fa-exchange-alt"></i> Convert</button>
-    <div id="glyphDisplay">𓂀</div>
     
     <button id="cameraBtn"><i class="fas fa-camera"></i> Open Camera</button>
     
@@ -104,13 +89,13 @@
     <canvas id="resultCanvas"></canvas>
     
     <div class="actions" id="actionButtons" style="display:none;">
-      <button id="captureBtn" style="background:var(--teal);"><i class="fas fa-camera-retro"></i> Capture</button>
-      <button id="cancelBtn" style="background:#d9534f;"><i class="fas fa-times"></i> Cancel</button>
+      <button id="captureBtn" style="background:var(--teal);color:white;"><i class="fas fa-camera-retro"></i> Capture</button>
+      <button id="cancelBtn" style="background:#d9534f;color:white;"><i class="fas fa-times"></i> Cancel</button>
     </div>
     
     <div class="actions" id="downloadSection" style="display:none;">
       <button id="downloadBtn" style="background:var(--gold);color:var(--black);"><i class="fas fa-download"></i> Download</button>
-      <button id="newPhotoBtn" style="background:var(--teal);"><i class="fas fa-redo"></i> Retake</button>
+      <button id="newPhotoBtn" style="background:var(--teal);color:white;"><i class="fas fa-redo"></i> Retake</button>
     </div>
   </div>
 
@@ -126,102 +111,81 @@
     };
 
     // DOM Elements
-    const elements = {
-      username: document.getElementById('username'),
-      convertBtn: document.getElementById('convertBtn'),
-      glyphDisplay: document.getElementById('glyphDisplay'),
-      cameraBtn: document.getElementById('cameraBtn'),
-      video: document.getElementById('video'),
-      resultCanvas: document.getElementById('resultCanvas'),
-      actionButtons: document.getElementById('actionButtons'),
-      captureBtn: document.getElementById('captureBtn'),
-      cancelBtn: document.getElementById('cancelBtn'),
-      downloadSection: document.getElementById('downloadSection'),
-      downloadBtn: document.getElementById('downloadBtn'),
-      newPhotoBtn: document.getElementById('newPhotoBtn')
-    };
-
+    const video = document.getElementById('video');
+    const resultCanvas = document.getElementById('resultCanvas');
     let stream = null;
 
-    // Convert Name to Hieroglyphs
-    elements.convertBtn.addEventListener('click', () => {
-      const name = elements.username.value.trim().toUpperCase();
-      let result = '';
-      
-      for (const char of name) {
-        result += hieroglyphMap[char] || '?';
-      }
-      
-      elements.glyphDisplay.innerHTML = result.split('').map(char => 
-        `<span style="display:inline-block;margin:0 2px;">${char}</span>`
-      ).join('') || '𓂀';
-    });
-
     // Camera Functions
-    elements.cameraBtn.addEventListener('click', toggleCamera);
-    elements.cancelBtn.addEventListener('click', toggleCamera);
-    elements.newPhotoBtn.addEventListener('click', toggleCamera);
+    document.getElementById('cameraBtn').addEventListener('click', toggleCamera);
+    document.getElementById('cancelBtn').addEventListener('click', toggleCamera);
+    document.getElementById('newPhotoBtn').addEventListener('click', toggleCamera);
 
     async function toggleCamera() {
       if (stream) {
         // Turn off camera
         stream.getTracks().forEach(track => track.stop());
         stream = null;
-        elements.video.style.display = 'none';
-        elements.actionButtons.style.display = 'none';
-        elements.downloadSection.style.display = 'none';
-        elements.resultCanvas.style.display = 'none';
-        elements.cameraBtn.innerHTML = '<i class="fas fa-camera"></i> Open Camera';
+        video.style.display = 'none';
+        document.getElementById('actionButtons').style.display = 'none';
+        document.getElementById('downloadSection').style.display = 'none';
+        resultCanvas.style.display = 'none';
+        document.getElementById('cameraBtn').innerHTML = '<i class="fas fa-camera"></i> Open Camera';
         return;
       }
 
       // Turn on camera
       try {
         stream = await navigator.mediaDevices.getUserMedia({ video: true });
-        elements.video.srcObject = stream;
-        elements.video.style.display = 'block';
-        elements.actionButtons.style.display = 'flex';
-        elements.cameraBtn.innerHTML = '<i class="fas fa-camera-slash"></i> Close Camera';
+        video.srcObject = stream;
+        video.style.display = 'block';
+        document.getElementById('actionButtons').style.display = 'flex';
+        document.getElementById('cameraBtn').innerHTML = '<i class="fas fa-camera-slash"></i> Close Camera';
       } catch (err) {
         alert("Camera error: " + err.message);
       }
     }
 
-    // Capture Photo
-    elements.captureBtn.addEventListener('click', () => {
+    // Capture Photo with Hieroglyphs
+    document.getElementById('captureBtn').addEventListener('click', () => {
       if (!stream) return;
       
-      const ctx = elements.resultCanvas.getContext('2d');
-      elements.resultCanvas.width = elements.video.videoWidth;
-      elements.resultCanvas.height = elements.video.videoHeight;
-      
-      // Draw video frame
-      ctx.drawImage(elements.video, 0, 0);
-      
-      // Add hieroglyphs
-      const name = elements.username.value.trim();
-      if (name) {
-        ctx.font = 'bold 50px "Noto Sans Egyptian Hieroglyphs", sans-serif';
-        ctx.fillStyle = 'rgba(255, 215, 0, 0.9)';
-        ctx.textAlign = 'center';
-        ctx.fillText(
-          name.split('').map(c => hieroglyphMap[c.toUpperCase()] || '?').join(''),
-          elements.resultCanvas.width / 2,
-          80
-        );
+      const name = document.getElementById('username').value.trim();
+      if (!name) {
+        alert("Please enter your name first!");
+        return;
       }
       
-      elements.resultCanvas.style.display = 'block';
-      elements.video.style.display = 'none';
-      elements.actionButtons.style.display = 'none';
-      elements.downloadSection.style.display = 'flex';
+      const ctx = resultCanvas.getContext('2d');
+      resultCanvas.width = video.videoWidth;
+      resultCanvas.height = video.videoHeight;
+      
+      // Draw video frame
+      ctx.drawImage(video, 0, 0);
+      
+      // Convert name to hieroglyphs
+      const hieroglyphs = name.toUpperCase().split('').map(c => hieroglyphMap[c] || '?').join('');
+      
+      // Add hieroglyphs to image
+      ctx.font = 'bold 60px "Noto Sans Egyptian Hieroglyphs", sans-serif';
+      ctx.fillStyle = 'rgba(255, 215, 0, 0.9)';
+      ctx.strokeStyle = 'rgba(0, 0, 0, 0.8)';
+      ctx.lineWidth = 3;
+      ctx.textAlign = 'center';
+      ctx.strokeText(hieroglyphs, resultCanvas.width/2, 80);
+      ctx.fillText(hieroglyphs, resultCanvas.width/2, 80);
+      
+      // Show result
+      resultCanvas.style.display = 'block';
+      video.style.display = 'none';
+      document.getElementById('actionButtons').style.display = 'none';
+      document.getElementById('downloadSection').style.display = 'flex';
     });
 
     // Download Image
-    elements.downloadBtn.addEventListener('click', () => {
+    document.getElementById('downloadBtn').addEventListener('click', () => {
       const link = document.createElement('a');
-      link.download = 'hieroglyph-photo.png';
-      link.href = elements.resultCanvas.toDataURL('image/png');
+      link.download = 'pharaoh-photo.png';
+      link.href = resultCanvas.toDataURL('image/png');
       link.click();
     });
   </script>
