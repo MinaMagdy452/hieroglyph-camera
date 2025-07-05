@@ -80,6 +80,7 @@
       margin-top: 15px;
       display: none;
       border: 2px solid var(--gold);
+      transform: scaleX(1); /* التأكد من عدم انعكاس الصورة */
     }
     
     .actions {
@@ -101,7 +102,6 @@
       box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
     }
     
-    /* Ankh Symbol Decorations */
     .ankh {
       color: var(--gold);
       font-size: 24px;
@@ -131,7 +131,6 @@
   </div>
 
   <script>
-    // Hieroglyphic Characters Map
     const hieroglyphMap = {
       'A': '𓄿', 'B': '𓃀', 'C': '𓍿', 'D': '𓂧', 'E': '𓇋',
       'F': '𓆑', 'G': '𓎼', 'H': '𓎛', 'I': '𓇋', 'J': '𓆓',
@@ -141,19 +140,16 @@
       ' ': ' '
     };
 
-    // DOM Elements
     const video = document.getElementById('video');
     const resultCanvas = document.getElementById('resultCanvas');
     let stream = null;
 
-    // Camera Functions
     document.getElementById('cameraBtn').addEventListener('click', toggleCamera);
     document.getElementById('cancelBtn').addEventListener('click', toggleCamera);
     document.getElementById('newPhotoBtn').addEventListener('click', toggleCamera);
 
     async function toggleCamera() {
       if (stream) {
-        // Turn off camera
         stream.getTracks().forEach(track => track.stop());
         stream = null;
         video.style.display = 'none';
@@ -164,7 +160,6 @@
         return;
       }
 
-      // Turn on camera
       try {
         stream = await navigator.mediaDevices.getUserMedia({ 
           video: { 
@@ -175,6 +170,7 @@
         });
         video.srcObject = stream;
         video.style.display = 'block';
+        video.style.transform = 'scaleX(1)'; // إلغاء الانعكاس
         document.getElementById('actionButtons').style.display = 'flex';
         document.getElementById('cameraBtn').innerHTML = '<i class="fas fa-camera-slash"></i> Close Camera';
       } catch (err) {
@@ -182,7 +178,6 @@
       }
     }
 
-    // Capture Photo with Hieroglyphs
     document.getElementById('captureBtn').addEventListener('click', () => {
       if (!stream) return;
       
@@ -196,13 +191,12 @@
       resultCanvas.width = video.videoWidth;
       resultCanvas.height = video.videoHeight;
       
-      // Draw video frame
-      ctx.drawImage(video, 0, 0);
+      // رسم الصورة بدون انعكاس
+      ctx.drawImage(video, 0, 0, resultCanvas.width, resultCanvas.height);
       
-      // Convert name to hieroglyphs
+      // إضافة الهيروغليفية
       const hieroglyphs = name.toUpperCase().split('').map(c => hieroglyphMap[c] || '?').join('');
       
-      // Add hieroglyphs to image with styling
       ctx.font = 'bold 70px "Noto Sans Egyptian Hieroglyphs", sans-serif';
       ctx.fillStyle = 'rgba(212, 175, 55, 0.9)';
       ctx.strokeStyle = 'rgba(0, 0, 0, 0.8)';
@@ -210,22 +204,18 @@
       ctx.textAlign = 'center';
       ctx.textBaseline = 'top';
       
-      // Text shadow effect
       for (let i = 0; i < 3; i++) {
         ctx.strokeText(hieroglyphs, resultCanvas.width/2, 50);
       }
       
-      // Main text
       ctx.fillText(hieroglyphs, resultCanvas.width/2, 50);
       
-      // Show result
       resultCanvas.style.display = 'block';
       video.style.display = 'none';
       document.getElementById('actionButtons').style.display = 'none';
       document.getElementById('downloadSection').style.display = 'flex';
     });
 
-    // Download Image
     document.getElementById('downloadBtn').addEventListener('click', () => {
       const link = document.createElement('a');
       link.download = 'pharaoh-photo-' + Date.now() + '.png';
