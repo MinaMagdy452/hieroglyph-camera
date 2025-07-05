@@ -80,7 +80,6 @@
       margin-top: 15px;
       display: none;
       border: 2px solid var(--gold);
-      transform: scaleX(1); /* التأكد من عدم انعكاس الصورة */
     }
     
     .actions {
@@ -170,7 +169,6 @@
         });
         video.srcObject = stream;
         video.style.display = 'block';
-        video.style.transform = 'scaleX(1)'; // إلغاء الانعكاس
         document.getElementById('actionButtons').style.display = 'flex';
         document.getElementById('cameraBtn').innerHTML = '<i class="fas fa-camera-slash"></i> Close Camera';
       } catch (err) {
@@ -191,7 +189,7 @@
       resultCanvas.width = video.videoWidth;
       resultCanvas.height = video.videoHeight;
       
-      // رسم الصورة بدون انعكاس
+      // رسم الصورة بشكل طبيعي بدون انعكاس
       ctx.drawImage(video, 0, 0, resultCanvas.width, resultCanvas.height);
       
       // إضافة الهيروغليفية
